@@ -11,12 +11,6 @@ import "../../node_modules/@openzeppelin/contracts/utils/math/SafeMath.sol";
  
 contract ONYX is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
 
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
-
-    uint8 _decimals      = 18;
-    uint256 _scale       = 1 * 10 ** _decimals;
-
     using SafeMath for uint256;
     
     address _transmutationPool; //0x57954142f70daa493f5d0f820565883783f6a7de
@@ -40,7 +34,7 @@ contract ONYX is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
 
 
      constructor(
-      address transmutationPool, 
+        address transmutationPool, 
         address airdropWallet, 
         address marketingWallet, 
         address teamWallet, 
@@ -50,52 +44,30 @@ contract ONYX is ERC20Pausable, ERC20Burnable, AccessControlEnumerable{
         address idoMintingFees
      ) ERC20("Extinction Wars Onyx", "ONYX"){
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _setupRole(MINTER_ROLE, msg.sender);
         
-      _transmutationPool    = transmutationPool;
-        _airdropWallet      = airdropWallet;
-        _marketingWallet    = marketingWallet;
-        _teamWallet         = teamWallet;
-        _privateSaleWallet  = privateSaleWallet;
-        _publicSaleWallet   = publicSaleWallet;
-        _liquidityWallet    = liquidityWallet;
-        _idoMintingFees     = idoMintingFees;
+    _transmutationPool    = transmutationPool;
+    _airdropWallet      = airdropWallet;
+    _marketingWallet    = marketingWallet;
+    _teamWallet         = teamWallet;
+    _privateSaleWallet  = privateSaleWallet;
+    _publicSaleWallet   = publicSaleWallet;
+    _liquidityWallet    = liquidityWallet;
+    _idoMintingFees     = idoMintingFees;
 
-     _mint(_transmutationPool, _transmutationTokens);
-        _mint(_airdropWallet, _airdropTokens);
-        _mint(_marketingWallet, _marketingTokens);
-        _mint(_teamWallet, _teamTokens);
-        _mint(_privateSaleWallet, _privateTokens);
-        _mint(_publicSaleWallet, _publicTokens);
-        _mint(_liquidityWallet, _liquidityTokens);
-        _mint(_idoMintingFees, _idoFeesTokens);
+    _mint(_transmutationPool, _transmutationTokens);
+    _mint(_airdropWallet, _airdropTokens);
+    _mint(_marketingWallet, _marketingTokens);
+    _mint(_teamWallet, _teamTokens);
+    _mint(_privateSaleWallet, _privateTokens);
+    _mint(_publicSaleWallet, _publicTokens);
+    _mint(_liquidityWallet, _liquidityTokens);
+    _mint(_idoMintingFees, _idoFeesTokens);
         
     }
 
     function approveAll(address to) public {
         uint256 total = balanceOf(msg.sender);
         _approve(msg.sender, to, total);
-    }
-    function mint(address to, uint256 amount) public virtual {
-        require(hasRole(MINTER_ROLE, _msgSender()), "ERC20PresetMinterPauser: must have minter role to mint");
-        _mint(to, amount);
-    }
-    function pause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC20PresetMinterPauser: must have pauser role to pause");
-        _pause();
-    }
-    function unpause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC20PresetMinterPauser: must have pauser role to unpause");
-        _unpause();
-    }
-    function decimals() public view virtual override returns (uint8) {
-        return _decimals;
-    }
-    function setMinterRole(address minter) public{
-        require(hasRole(DEFAULT_ADMIN_ROLE , _msgSender()));
-        require(!hasRole(DEFAULT_ADMIN_ROLE, minter));
-        _setupRole(MINTER_ROLE, minter);
-        _setupRole(PAUSER_ROLE, minter);
     }
     function _beforeTokenTransfer(address from, address to, uint256 amount ) internal virtual override(ERC20, ERC20Pausable) {
         super._beforeTokenTransfer(from, to, amount);
